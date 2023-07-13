@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Post as TPost } from '@/types/post';
+import { Post as TPost } from '@/types';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
