@@ -10,3 +10,15 @@ export async function getPosts(args?: Prisma.PostFindManyArgs) {
     return { error };
   }
 }
+
+export async function getPostById(id: string) {
+  try {
+    const result = await prisma.post.findUnique({
+      where: { id },
+    });
+
+    return { post: result };
+  } catch (error: any) {
+    return { error };
+  }
+}

@@ -1,7 +1,6 @@
 import { FC } from 'react';
-import { Post as TPost } from '@prisma/client';
-import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getPosts, getPostById } from '@/lib/prisma/posts';
 
 interface PageProps {
   params: {
@@ -10,25 +9,27 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params: { id } }: PageProps) {
-  const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
-    method: 'GET',
-    next: { revalidate: 5 },
-  });
-  const post: TPost = await res.json();
+  const { post } = await getPostById(id);
 
   return {
-    title: post.title,
+    title: post?.title,
+    description: post?.body,
   };
 }
 
-const Page: FC<PageProps> = async ({ params: { id } }) => {
-  const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
-    method: 'GET',
-    next: { revalidate: 5 },
-  });
-  const post: TPost = await res.json();
+export async function generateStaticParams() {
+  const { posts } = await getPosts();
+  return posts?.map((post) => ({ id: post.id }));
+}
 
-  if (res.status === 404) {
+const Page: FC<PageProps> = async ({ params: { id } }) => {
+  const { post, error } = await getPostById(id);
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  if (!post) {
     notFound();
   }
 

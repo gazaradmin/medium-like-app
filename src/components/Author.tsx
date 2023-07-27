@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { Post as TPost } from '@prisma/client';
-import { User as TUser } from '@/types/';
 import Post from '@/components/post/Post';
 import { notFound } from 'next/navigation';
+import { getPosts } from '@/lib/prisma/posts';
+import { User as TUser } from '@/types';
 interface AuthorProps {
   authorId: number;
 }
@@ -16,17 +16,19 @@ const Author: FC<AuthorProps> = async ({ authorId }) => {
   if (userRes.status !== 200) {
     throw new Error('Хэрэглэгчийн мэдээллийг унших үед алдаа гарлаа');
   }
+
   const user: TUser = await userRes.json();
-  const postRes = await fetch(
-    `https://jsonplaceholder.typicode.com/posts?userId=${authorId}`
-  );
-  if (postRes.status === 404) {
-    notFound();
+
+  const { posts = [], error } = await getPosts({
+    where: { userId: authorId },
+    take: 10,
+  });
+
+  if (error) {
+    console.log('errr');
+    throw new Error(error);
   }
-  if (postRes.status !== 200) {
-    throw new Error('Холбоотой блогуудыг унших үед алдаа гарлаа');
-  }
-  const posts: TPost[] = await postRes.json();
+
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
       {' '}

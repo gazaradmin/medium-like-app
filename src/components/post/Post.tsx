@@ -25,7 +25,7 @@ const Item: FunctionComponent<ItemProps> = ({ post }) => {
               <div>
                 <h2 className="text-2xl font-bold leading-8 tracking-tight">
                   <Link
-                    href={`/blog/${id}`}
+                    href={`/post/${id}`}
                     className="text-gray-900 dark:text-gray-100"
                   >
                     {title}
