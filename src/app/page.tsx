@@ -1,12 +1,12 @@
 import Post from '@/components/post/Post';
-import { Post as TPost } from '@/types';
+import { getPosts } from '@/lib/prisma/posts';
 
 export default async function Page() {
-  const res = await fetch('https://jsonplaceholder.typicode.com/posts', {
-    cache: 'no-store',
-  });
+  const { posts, error } = await getPosts();
 
-  const posts: TPost[] = await res.json();
+  if (error) {
+    throw error;
+  }
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -19,8 +19,8 @@ export default async function Page() {
         </p>
       </div>
       <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-        {!posts.length && 'No posts found.'}
-        {posts.map((post) => (
+        {!posts?.length && 'No posts found.'}
+        {posts?.map((post) => (
           <Post key={post.id} post={post} />
         ))}
       </ul>

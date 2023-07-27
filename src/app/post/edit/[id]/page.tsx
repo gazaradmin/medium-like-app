@@ -1,4 +1,4 @@
-import BlogForm from '@/components/blog/Form';
+import PostForm from '@/components/post/Form';
 import { FC } from 'react';
 
 interface PageProps {
@@ -8,7 +8,7 @@ interface PageProps {
 }
 
 const Page: FC<PageProps> = ({ params: { id } }) => {
-  return <BlogForm id={id} />;
+  return <PostForm id={id} />;
 };
 
 export default Page;

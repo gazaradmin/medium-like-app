@@ -1,6 +1,7 @@
 import { FC } from 'react';
-import { User as TUser, Post as TPost } from '@/types/index';
-import Post from '@/components/blog/Post';
+import { Post as TPost } from '@prisma/client';
+import { User as TUser } from '@/types/';
+import Post from '@/components/post/Post';
 import { notFound } from 'next/navigation';
 interface AuthorProps {
   authorId: number;
