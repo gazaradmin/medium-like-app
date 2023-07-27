@@ -2,6 +2,7 @@ import siteMetadata from '@/data/siteMetadata';
 import Link from 'next/link';
 import Image from 'next/image';
 import headerNavLinks from '@/data/headerNavLinks';
+import SignInButton from '@/components/auth/SignInButton';
 
 export default async function Header() {
   return (
@@ -30,15 +31,20 @@ export default async function Header() {
       </div>
       <div className="flex items-center text-base leading-5">
         <div className="hidden sm:block">
-          {headerNavLinks.map((link) => (
-            <Link
-              key={link.title}
-              href={link.href}
-              className="p-1 font-medium text-gray-900 dark:text-gray-100 sm:p-4"
-            >
-              {link.title}
-            </Link>
-          ))}
+          <ul className="flex items-center">
+            {headerNavLinks.map((link) => (
+              <Link
+                key={link.title}
+                href={link.href}
+                className="p-1 font-medium text-gray-900 dark:text-gray-100"
+              >
+                {link.title}
+              </Link>
+            ))}
+            <li className="p-4">
+              <SignInButton />
+            </li>
+          </ul>
         </div>
       </div>
     </header>

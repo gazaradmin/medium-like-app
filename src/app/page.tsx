@@ -1,4 +1,4 @@
-import Post from '@/components/blog/Post';
+import Post from '@/components/post/Post';
 import { Post as TPost } from '@/types';
 
 export default async function Page() {
