@@ -2,12 +2,14 @@ import { Post as TPost } from '@prisma/client';
 
 import Link from 'next/link';
 import { FunctionComponent } from 'react';
+import { Button } from '@/components/ui/button';
 
 interface ItemProps {
   post: TPost;
+  isEditable?: boolean;
 }
 
-const Item: FunctionComponent<ItemProps> = ({ post }) => {
+const Item: FunctionComponent<ItemProps> = ({ post, isEditable = false }) => {
   const { id, title, body } = post;
 
   return (
@@ -36,7 +38,7 @@ const Item: FunctionComponent<ItemProps> = ({ post }) => {
                 {body}
               </div>
             </div>
-            <div className="text-base font-medium leading-6">
+            <div className="text-base font-medium leading-6 flex space-x-2 justify-between">
               <Link
                 href={`/blog/${id}`}
                 className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
@@ -44,6 +46,13 @@ const Item: FunctionComponent<ItemProps> = ({ post }) => {
               >
                 Read more &rarr;
               </Link>
+              <div>
+                {isEditable && (
+                  <Button>
+                    <Link href={`/post/edit/${post.id}`}>Edit</Link>
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>

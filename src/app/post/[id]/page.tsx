@@ -25,9 +25,9 @@ export async function generateStaticParams() {
 const Page: FC<PageProps> = async ({ params: { id } }) => {
   const { post, error } = await getPostById(id);
 
-  if (error) {
-    throw new Error(error);
-  }
+  // if (error) {
+  //   throw new Error(error);
+  // }
 
   if (!post) {
     notFound();

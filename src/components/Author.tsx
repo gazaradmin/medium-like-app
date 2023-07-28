@@ -46,7 +46,7 @@ const Author: FC<AuthorProps> = async ({ authorId }) => {
         {' '}
         {!posts.length && 'No posts found.'}{' '}
         {posts.map((post) => (
-          <Post key={post.id} post={post} />
+          <Post isEditable={true} key={post.id} post={post} />
         ))}{' '}
       </ul>{' '}
     </div>

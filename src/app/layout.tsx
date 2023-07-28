@@ -1,4 +1,5 @@
 import Header from '@/components/Header';
+import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import siteMetadata from '@/data/siteMetadata';
 
@@ -25,6 +26,7 @@ export default function RootLayout({
             <Provider>
               <Header />
               <main className="mb-auto">{children}</main>
+              <Toaster />
             </Provider>
           </div>
         </div>
