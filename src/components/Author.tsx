@@ -1,31 +1,17 @@
 import { FC } from 'react';
 import Post from '@/components/post/Post';
-import { notFound } from 'next/navigation';
 import { getPosts } from '@/lib/prisma/posts';
-import { User as TUser } from '@/types';
+import { DefaultUser } from 'next-auth';
 interface AuthorProps {
-  authorId: number;
+  user: DefaultUser;
 }
-const Author: FC<AuthorProps> = async ({ authorId }) => {
-  const userRes = await fetch(
-    `https://jsonplaceholder.typicode.com/users/${authorId}`
-  );
-  if (userRes.status === 404) {
-    notFound();
-  }
-  if (userRes.status !== 200) {
-    throw new Error('Хэрэглэгчийн мэдээллийг унших үед алдаа гарлаа');
-  }
-
-  const user: TUser = await userRes.json();
-
+const Author: FC<AuthorProps> = async ({ user }) => {
   const { posts = [], error } = await getPosts({
-    where: { userId: authorId },
+    where: { userId: user.id },
     take: 10,
   });
 
   if (error) {
-    console.log('errr');
     throw new Error(error);
   }
 

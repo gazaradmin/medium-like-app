@@ -1,14 +1,20 @@
-import { FC } from 'react';
 import Author from '@/components/Author';
-// import { useSession } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
+import { nextOptions } from '@/app/api/auth/[...nextauth]/route';
+import { redirect } from 'next/navigation';
 
-interface PageProps {}
+const Page = async () => {
+  const session = await getServerSession(nextOptions);
 
-const Page: FC<PageProps> = async () => {
-  // const { data: session } = useSession();
-  const signInUserId = 1;
+  if (!session) {
+    redirect('/signin');
+  }
 
-  return <Author authorId={signInUserId} />;
+  if (!session.user) {
+    redirect('/signin');
+  }
+
+  return <Author user={session.user} />;
 };
 
 export default Page;

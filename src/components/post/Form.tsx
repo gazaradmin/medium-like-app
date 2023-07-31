@@ -17,10 +17,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Post as TPost } from '@prisma/client';
-import { addPost, editPost, removePost } from '@/app/actions/posts';
+import { addPost, editPost, removePost } from '@/app/_actions/posts';
 
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 interface PostFormProps {
   post?: TPost;
@@ -40,6 +41,8 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
       body: post ? post.body : '',
     },
   });
+
+  const { data: session } = useSession();
 
   const router = useRouter();
   const { toast } = useToast();
@@ -64,7 +67,7 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
           });
         });
     } else {
-      addPost({ ...values, userId: 1 })
+      addPost({ ...values, userId: session?.user?.id || '' })
         .then(({ post }) => {
           toast({
             title: 'Add Post Success',
