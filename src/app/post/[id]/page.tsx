@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { notFound } from 'next/navigation';
 import { getPosts, getPostById } from '@/lib/prisma/posts';
 
@@ -18,11 +17,12 @@ export async function generateMetadata({ params: { id } }: PageProps) {
 }
 
 export async function generateStaticParams() {
-  const { posts } = await getPosts();
-  return posts?.map((post) => ({ id: post.id }));
+  const { posts = [] } = await getPosts({ take: 100 });
+
+  return posts.map((post) => ({ id: post.id }));
 }
 
-const Page: FC<PageProps> = async ({ params: { id } }) => {
+const Page = async ({ params: { id } }: PageProps) => {
   const { post, error } = await getPostById(id);
 
   if (error) {
