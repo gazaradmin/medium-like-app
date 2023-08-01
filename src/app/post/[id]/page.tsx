@@ -17,10 +17,10 @@ export async function generateMetadata({ params: { id } }: PageProps) {
   };
 }
 
-// export async function generateStaticParams() {
-//   const { posts } = await getPosts();
-//   return posts?.map((post) => ({ id: post.id }));
-// }
+export async function generateStaticParams() {
+  const { posts } = await getPosts();
+  return posts?.map((post) => ({ id: post.id }));
+}
 
 const Page: FC<PageProps> = async ({ params: { id } }) => {
   const { post, error } = await getPostById(id);

@@ -1,11 +1,10 @@
-import { FC } from 'react';
 import Post from '@/components/post/Post';
 import { getPosts } from '@/lib/prisma/posts';
 import { DefaultUser } from 'next-auth';
 interface AuthorProps {
   user: DefaultUser;
 }
-const Author: FC<AuthorProps> = async ({ user }) => {
+const Author = async ({ user }: AuthorProps) => {
   const { posts = [], error } = await getPosts({
     where: { userId: user.id },
     take: 10,
@@ -14,7 +13,6 @@ const Author: FC<AuthorProps> = async ({ user }) => {
   if (error) {
     throw new Error(error);
   }
-
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
       {' '}

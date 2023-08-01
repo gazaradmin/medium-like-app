@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import prisma from '.';
 
-const getPosts = async (args?: Prisma.PostFindManyArgs) => {
+export const getPosts = async (args?: Prisma.PostFindManyArgs) => {
   try {
     const result = await prisma.post.findMany(args);
 
@@ -11,7 +11,7 @@ const getPosts = async (args?: Prisma.PostFindManyArgs) => {
   }
 };
 
-const getPostById = async (id: string) => {
+export const getPostById = async (id: string) => {
   try {
     const result = await prisma.post.findUnique({
       where: { id },
@@ -23,7 +23,7 @@ const getPostById = async (id: string) => {
   }
 };
 
-const createPost = async (data: Prisma.PostCreateInput) => {
+export const createPost = async (data: Prisma.PostCreateInput) => {
   try {
     const result = await prisma.post.create({ data });
 
@@ -33,7 +33,7 @@ const createPost = async (data: Prisma.PostCreateInput) => {
   }
 };
 
-const updatePost = async (id: string, data: Prisma.PostUpdateInput) => {
+export const updatePost = async (id: string, data: Prisma.PostUpdateInput) => {
   try {
     const result = await prisma.post.update({
       where: { id },
@@ -46,7 +46,7 @@ const updatePost = async (id: string, data: Prisma.PostUpdateInput) => {
   }
 };
 
-const deletePost = async (id: string) => {
+export const deletePost = async (id: string) => {
   try {
     const result = await prisma.post.delete({
       where: { id },
@@ -57,5 +57,3 @@ const deletePost = async (id: string) => {
     return { error };
   }
 };
-
-export { createPost, getPosts, getPostById, updatePost, deletePost };

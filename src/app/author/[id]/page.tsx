@@ -1,5 +1,6 @@
 import Author from '@/components/Author';
-import { FC } from 'react';
+import { getUserById } from '@/lib/prisma/users';
+import { notFound } from 'next/navigation';
 
 interface AuthorPageProps {
   params: {
@@ -7,8 +8,17 @@ interface AuthorPageProps {
   };
 }
 
-const AuthorPage: FC<AuthorPageProps> = ({ params: { id } }) => {
-  return <Author authorId={parseInt(id)} />;
+const AuthorPage = async ({ params: { id } }: AuthorPageProps) => {
+  const { user, error } = await getUserById(id);
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!user) {
+    notFound();
+  }
+
+  return <Author user={user} />;
 };
 
 export default AuthorPage;
