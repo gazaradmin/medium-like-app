@@ -1,7 +1,6 @@
 import { Post as TPost } from '@prisma/client';
 
 import Link from 'next/link';
-import { FunctionComponent } from 'react';
 import { Button } from '@/components/ui/button';
 
 interface ItemProps {
@@ -9,7 +8,7 @@ interface ItemProps {
   isEditable?: boolean;
 }
 
-const Item: FunctionComponent<ItemProps> = ({ post, isEditable = false }) => {
+const Item = ({ post, isEditable = false }: ItemProps) => {
   const { id, title, body } = post;
 
   return (

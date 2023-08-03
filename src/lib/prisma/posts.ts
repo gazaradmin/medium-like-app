@@ -3,9 +3,10 @@ import prisma from '.';
 
 export const getPosts = async (args?: Prisma.PostFindManyArgs) => {
   try {
-    const result = await prisma.post.findMany(args);
+    const posts = await prisma.post.findMany(args);
+    const count = await prisma.post.count();
 
-    return { posts: result };
+    return { posts, count };
   } catch (error: any) {
     return { error };
   }
@@ -13,11 +14,11 @@ export const getPosts = async (args?: Prisma.PostFindManyArgs) => {
 
 export const getPostById = async (id: string) => {
   try {
-    const result = await prisma.post.findUnique({
+    const post = await prisma.post.findUnique({
       where: { id },
     });
 
-    return { post: result };
+    return { post };
   } catch (error: any) {
     return { error };
   }
@@ -25,9 +26,9 @@ export const getPostById = async (id: string) => {
 
 export const createPost = async (data: Prisma.PostCreateInput) => {
   try {
-    const result = await prisma.post.create({ data });
+    const post = await prisma.post.create({ data });
 
-    return { post: result };
+    return { post };
   } catch (error: any) {
     return { error };
   }
@@ -35,12 +36,12 @@ export const createPost = async (data: Prisma.PostCreateInput) => {
 
 export const updatePost = async (id: string, data: Prisma.PostUpdateInput) => {
   try {
-    const result = await prisma.post.update({
+    const post = await prisma.post.update({
       where: { id },
       data,
     });
 
-    return { post: result };
+    return { post };
   } catch (error: any) {
     return { error };
   }
@@ -48,11 +49,11 @@ export const updatePost = async (id: string, data: Prisma.PostUpdateInput) => {
 
 export const deletePost = async (id: string) => {
   try {
-    const result = await prisma.post.delete({
+    const post = await prisma.post.delete({
       where: { id },
     });
 
-    return { post: result };
+    return { post };
   } catch (error: any) {
     return { error };
   }
