@@ -8,7 +8,7 @@ import SignInButton from '@/components/auth/SignInButton';
 import { useSession } from 'next-auth/react';
 
 const Header = () => {
-  const session = useSession();
+  const { data: session } = useSession();
 
   return (
     <header className="flex items-center justify-between py-10">
