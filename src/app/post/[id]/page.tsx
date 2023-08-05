@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getPosts, getPostById } from '@/lib/prisma/posts';
+import ReactMarkdown from 'react-markdown';
 
 interface PageProps {
   params: {
@@ -36,7 +37,7 @@ const Page = async ({ params: { id } }: PageProps) => {
   return (
     <>
       <h1 className="text-2xl uppercase pb-2">{post.title}</h1>
-      <article>{post.body}</article>
+      <ReactMarkdown>{post.body}</ReactMarkdown>,
     </>
   );
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
@@ -22,6 +22,7 @@ import { addPost, editPost, removePost } from '@/app/_actions/posts';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import Editor from '@/components/common/Editor';
 
 interface PostFormProps {
   post?: TPost;
@@ -29,7 +30,9 @@ interface PostFormProps {
 
 const formSchema = z.object({
   title: z.string({ required_error: 'Title is required' }).nonempty(),
-  body: z.string({ required_error: 'Body is required' }).nonempty(),
+  description: z
+    .string({ required_error: 'description is required' })
+    .nonempty(),
 });
 
 const PostForm: FC<PostFormProps> = ({ post }) => {
@@ -38,7 +41,7 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: post ? post.title : '',
-      body: post ? post.body : '',
+      description: post ? post.body : '',
     },
   });
 
@@ -46,12 +49,17 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
 
   const router = useRouter();
   const { toast } = useToast();
+  const [body, setBody] = useState(post?.body || '');
 
   // 2. Define a submit handler.
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log('onSubmit');
+    const data = {
+      ...values,
+      body,
+      userId: session?.user?.id || '',
+    };
     if (post) {
-      editPost(post.id, values)
+      editPost(post.id, data)
         .then(() => {
           toast({
             title: 'Update Post Success',
@@ -67,7 +75,7 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
           });
         });
     } else {
-      addPost({ ...values, userId: session?.user?.id || '' })
+      addPost(data)
         .then(({ post }) => {
           toast({
             title: 'Add Post Success',
@@ -124,7 +132,7 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
           />
           <FormField
             control={form.control}
-            name="body"
+            name="description"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Content</FormLabel>
@@ -135,6 +143,7 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
               </FormItem>
             )}
           />
+          <Editor body={body} setBody={setBody} />
           <div>
             {!post ? (
               ''

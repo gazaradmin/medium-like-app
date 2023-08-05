@@ -1,7 +1,7 @@
-import { getPosts } from '@/lib/prisma/posts';
-import { notFound } from 'next/navigation';
 import Post from '@/components/post/Post';
 import Pagination from '@/components/common/Pagination';
+import { getPosts } from '@/lib/prisma/posts';
+import { FunctionComponent } from 'react';
 
 interface PageProps {
   searchParams: {
@@ -9,9 +9,9 @@ interface PageProps {
   };
 }
 
-const POSTS_PER_PAGE = 2;
+const POSTS_PER_PAGE = 3;
 
-const Page = async ({ searchParams }: PageProps) => {
+const Page: FunctionComponent<PageProps> = async ({ searchParams }) => {
   const page = parseInt(searchParams.page || '1');
   const skip = page * POSTS_PER_PAGE - POSTS_PER_PAGE;
 
@@ -21,15 +21,11 @@ const Page = async ({ searchParams }: PageProps) => {
     error,
   } = await getPosts({ take: POSTS_PER_PAGE, skip });
 
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  if (!posts) {
-    notFound();
-  }
-
   const totalPages = Math.ceil(count / POSTS_PER_PAGE);
+
+  if (error) {
+    throw error;
+  }
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -39,6 +35,7 @@ const Page = async ({ searchParams }: PageProps) => {
         </h1>
       </div>
       <ul>
+        {!posts.length && 'No posts found.'}
         {posts.map((post) => (
           <Post key={post.id} post={post} />
         ))}

@@ -1,10 +1,15 @@
+'use client';
+
 import siteMetadata from '@/data/siteMetadata';
 import Link from 'next/link';
 import Image from 'next/image';
 import headerNavLinks from '@/data/headerNavLinks';
 import SignInButton from '@/components/auth/SignInButton';
+import { useSession } from 'next-auth/react';
 
-export default async function Header() {
+const Header = () => {
+  const session = useSession();
+
   return (
     <header className="flex items-center justify-between py-10">
       <div>
@@ -32,15 +37,18 @@ export default async function Header() {
       <div className="flex items-center text-base leading-5">
         <div className="hidden sm:block">
           <ul className="flex items-center">
-            {headerNavLinks.map((link) => (
-              <Link
-                key={link.title}
-                href={link.href}
-                className="p-1 font-medium text-gray-900 dark:text-gray-100"
-              >
-                {link.title}
-              </Link>
-            ))}
+            {headerNavLinks.map(
+              (link) =>
+                (!link.isPrivate || session) && (
+                  <Link
+                    key={link.title}
+                    href={link.href}
+                    className="p-1 font-medium text-gray-900 dark:text-gray-100"
+                  >
+                    {link.title}
+                  </Link>
+                )
+            )}
             <li className="p-4">
               <SignInButton />
             </li>
@@ -49,4 +57,6 @@ export default async function Header() {
       </div>
     </header>
   );
-}
+};
+
+export default Header;
