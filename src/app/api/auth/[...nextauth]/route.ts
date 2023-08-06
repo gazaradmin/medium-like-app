@@ -1,30 +1,6 @@
-import NextAuth, { NextAuthOptions } from 'next-auth';
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import DiscordProvider from 'next-auth/providers/discord';
-import client from '@/lib/prisma';
+import { authOptions } from '@/lib/utils/authOptions';
+import NextAuth from 'next-auth';
 
-export const nextOptions = {
-  providers: [
-    DiscordProvider({
-      clientId: process.env.DISCORD_CLIENT_ID || '',
-      clientSecret: process.env.DISCORD_CLIENT_SECRET || '',
-    }),
-  ],
-  adapter: PrismaAdapter(client),
-  pages: {
-    signIn: '/signin',
-  },
-  callbacks: {
-    session: async ({ session, user }) => {
-      if (session.user) {
-        session.user.id = user.id;
-      }
-
-      return session;
-    },
-  },
-} as NextAuthOptions;
-
-const handler = NextAuth(nextOptions);
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
