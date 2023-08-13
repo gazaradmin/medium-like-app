@@ -19,7 +19,11 @@ const Page: FunctionComponent<PageProps> = async ({ searchParams }) => {
     posts = [],
     count = 0,
     error,
-  } = await getPosts({ take: POSTS_PER_PAGE, skip });
+  } = await getPosts({
+    take: POSTS_PER_PAGE,
+    skip,
+    where: { published: true },
+  });
 
   const totalPages = Math.ceil(count / POSTS_PER_PAGE);
 

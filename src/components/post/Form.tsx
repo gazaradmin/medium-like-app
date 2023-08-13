@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Post as TPost } from '@prisma/client';
 import { addPost, editPost, removePost } from '@/app/_actions/posts';
 
@@ -33,6 +34,7 @@ const formSchema = z.object({
   description: z
     .string({ required_error: 'description is required' })
     .nonempty(),
+  published: z.boolean(),
 });
 
 const PostForm: FC<PostFormProps> = ({ post }) => {
@@ -42,6 +44,7 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
     defaultValues: {
       title: post ? post.title : '',
       description: post ? post.body : '',
+      published: post ? post.published : false,
     },
   });
 
@@ -56,6 +59,7 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
     const data = {
       ...values,
       body,
+      publishedAt: values.published ? new Date() : null,
       userId: session?.user?.id || '',
     };
     if (post) {
@@ -140,6 +144,23 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
                   <Textarea className="h-96" placeholder="body" {...field} />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="published"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>Нийтлэх эсэх</FormLabel>
+                </div>
               </FormItem>
             )}
           />

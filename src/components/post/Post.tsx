@@ -2,6 +2,7 @@ import { Post as TPost } from '@prisma/client';
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import dayjs from 'dayjs';
 
 interface ItemProps {
   post: TPost;
@@ -9,7 +10,9 @@ interface ItemProps {
 }
 
 const Item = ({ post, isEditable = false }: ItemProps) => {
-  const { id, title, body } = post;
+  const { id, title, body, publishedAt } = post;
+
+  const formatedDate = dayjs(publishedAt).format('YYYY-MM-DD');
 
   return (
     <li key={id} className="py-12">
@@ -18,7 +21,7 @@ const Item = ({ post, isEditable = false }: ItemProps) => {
           <dl>
             <dt className="sr-only">Published on</dt>
             <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-              <time dateTime={'2000-01-01'}>2000-01-01</time>
+              <time dateTime={formatedDate}>{formatedDate}</time>
             </dd>
           </dl>
           <div className="space-y-5 xl:col-span-3">

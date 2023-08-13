@@ -1,8 +1,13 @@
 import Post from '@/components/post/Post';
 import { getPosts } from '@/lib/prisma/posts';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Page() {
-  const { posts, error } = await getPosts();
+  const { posts, error } = await getPosts({
+    where: { published: true },
+    orderBy: { publishedAt: 'desc' },
+  });
 
   if (error) {
     throw error;
