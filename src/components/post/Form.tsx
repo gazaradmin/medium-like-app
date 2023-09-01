@@ -18,11 +18,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Post as TPost } from '@prisma/client';
-import { addPost, editPost, removePost } from '@/app/_actions/posts';
 
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import Editor from '@/components/common/Editor';
 
 interface PostFormProps {
@@ -48,8 +46,6 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
     },
   });
 
-  const { data: session } = useSession();
-
   const router = useRouter();
   const { toast } = useToast();
   const [body, setBody] = useState(post?.body || '');
@@ -59,11 +55,13 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
     const data = {
       ...values,
       body,
-      publishedAt: values.published ? new Date() : null,
-      userId: session?.user?.id || '',
     };
     if (post) {
-      editPost(post.id, data)
+      fetch(`/api/post/${post.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      })
+        .then((res) => res.json())
         .then(() => {
           toast({
             title: 'Update Post Success',
@@ -79,7 +77,8 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
           });
         });
     } else {
-      addPost(data)
+      fetch('/api/post', { method: 'POST', body: JSON.stringify(data) })
+        .then((res) => res.json())
         .then(({ post }) => {
           toast({
             title: 'Add Post Success',
@@ -98,10 +97,11 @@ const PostForm: FC<PostFormProps> = ({ post }) => {
   };
 
   const onDelete = () => {
-    console.log('POST', post);
     if (post) {
       if (confirm('Та устгахыг хүсч байна уу?'))
-        removePost(post.id)
+        fetch(`/api/post/${post.id}`, {
+          method: 'DELETE',
+        })
           .then(() => {
             router.push('/profile');
           })
